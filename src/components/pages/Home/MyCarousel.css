@@ -67,9 +67,12 @@
 }
 .contentyz h1 {
   border-bottom: 3px solid white;
+  text-align: center;
 }
 .contentyz p {
   padding-top: 10px;
+  padding: 5%;
+  text-align: center;
 }
 .img_title {
   font-size: 1.5em;
@@ -105,9 +108,33 @@
     display: none;
   }
   .carsel{
-    padding-top: 0px;
+    padding-top: 56px;
   }
   .part2 {
     width: 100%;
   }
 }
+ @media screen and (max-width: 800px){
+  .carsel{
+    padding-top: 0px;
+    margin-top: -10px;
+  }
+ }
+ @media screen and (max-width: 450px){
+  .carsel{
+    padding-top: 0px;
+    margin-top: -31px;
+  }
+ }
+ @media screen and (max-width: 400px){
+  .carsel{
+    padding-top: 0px;
+    margin-top: -35px;
+  }
+ }
+ @media screen and (max-width: 350px){
+  .carsel{
+    padding-top: 0px;
+    margin-top: -39px;
+  }
+ }

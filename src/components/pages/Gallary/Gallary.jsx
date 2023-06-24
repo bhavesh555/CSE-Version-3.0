@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getPosts } from "./../../../actions/gallery"
+;
 import './Gallary.css';
 import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import 'animate.css';
 import LazyLoad from 'react-lazyload';
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -11,90 +16,18 @@ import {
   faCircleChevronRight,
   faCircleXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import "react-loading-skeleton/dist/skeleton.css";
 
-export default function Gallary() {
-  const events = [
-    {
-      name: 'Farewell 2023',
-      images: [
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/XqLsZ0NR/c6454d4d-4ee3-4844-9f86-4befa39cab8b.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/XqLsZ0NR/c6454d4d-4ee3-4844-9f86-4befa39cab8b.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/pLMbnLhc/Whats-App-Image-2023-01-14-at-00-01-52.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/XqLsZ0NR/c6454d4d-4ee3-4844-9f86-4befa39cab8b.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        // Add more images for the farewell event
-      ],
-    },
-    {
-      name: 'Welcome Party',
-      images: [
-        {
-          original:
-            'https://i.postimg.cc/G2JQN1D4/2824932f-48db-4606-8052-c0829d8a7565.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/GhMMdr5Y/e22ceac9-c82a-4a3b-9d2c-b5697292df3d.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
-        {
-          original:
-            'https://i.postimg.cc/XqLsZ0NR/c6454d4d-4ee3-4844-9f86-4befa39cab8b.jpg',
-          thumbnail: 'https://i.postimg.cc/SKWTw8GW/nit3e3e23e-min.jpg',
-        },
 
-        // Add more images for Event 2
-      ],
-    },
-    // Add more event objects as needed
-  ];
-
-  const [selectedEvent, setSelectedEvent] = useState(events[0]);
+const Posts=(props)=>{
+  const posts = useSelector((state) => state.posts);
+  //
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingDelay, setLoadingDelay] = useState(5000); // 5 seconds
   const [galleryRef, galleryInView] = useInView({
     triggerOnce: true,
     threshold: 0.2,
@@ -128,7 +61,7 @@ export default function Gallary() {
   useEffect(() => {
     if (loadingMore) {
       setTimeout(() => {
-        setLoadedImages(selectedEvent.images.length);
+        setLoadedImages(selectedEvent.image.length);
         setLoadingMore(false);
       }, 2000);
     }
@@ -151,12 +84,12 @@ export default function Gallary() {
 
   const prevSlide = () => {
     slideNumber === 0
-      ? setSlideNumber(selectedEvent.images.length - 1)
+      ? setSlideNumber(selectedEvent.image.length - 1)
       : setSlideNumber(slideNumber - 1);
   };
 
   const nextSlide = () => {
-    slideNumber + 1 === selectedEvent.images.length
+    slideNumber + 1 === selectedEvent.image.length
       ? setSlideNumber(0)
       : setSlideNumber(slideNumber + 1);
   };
@@ -169,7 +102,32 @@ export default function Gallary() {
       setIsLoading(false);
     }, 2000);
   };
-  return (
+
+const HPost = ({  setCurrentId, post })=>{
+  const dispatch = useDispatch();
+  return(
+    <li
+      item key={post._id}
+      className={
+        post.title ? 'active' : ''
+      }
+      onClick={() => handleEventSelect(post)}
+    >
+      {post.title}
+    </li>
+  );
+};
+useEffect(() => {
+  const loadingTimer = setTimeout(() => {
+    setLoadingDelay(0);
+  }, 5000);
+
+  return () => {
+    clearTimeout(loadingTimer);
+  };
+}, []);
+
+  return  posts.length ? (
     <>
       <div>
         <div
@@ -223,25 +181,32 @@ export default function Gallary() {
               </ul>
             </div>
           </div>
+          
           <div style={{ width: '100%' }}>
             <div className="student-box1" style={{ width: '100%' }}>
               <h3 className="student-box-heading1">
                 "Enlightened Moments: Capturing NIT Raipur's Eventful Gallery"
               </h3>
               <div className="eventList">
+              {loadingDelay > 0 ? (
+            <div style={{ width: "100%", maxHeight: "100%" }}>
+        <SkeletonTheme baseColor="#2229a3" highlightColor="#edd3f1">
+          <p>
+            <Skeleton count={3} />
+          </p>
+        </SkeletonTheme>
+      </div>
+        ) :(
                 <ul>
-                  {events.map((event, index) => (
-                    <li
-                      key={index}
-                      className={
-                        selectedEvent.name === event.name ? 'active' : ''
-                      }
-                      onClick={() => handleEventSelect(event)}
-                    >
-                      {event.name}
-                    </li>
+                  {posts.map((post) =>
+                    (post.tags===props.tag ?(
+
+                      <div item key={post._id}>
+                    <HPost setCurrentId={props.setCurrentId} post={post} />
+                  </div>):null
                   ))}
                 </ul>
+        )}
                 <p style={{ color: 'white' }}>
                   To view the image in fullscreen mode, please click on it.
                 </p>
@@ -249,25 +214,33 @@ export default function Gallary() {
             </div>
             <div ref={galleryRef}>
               {galleryInView && (
-                <div className="Aiml galleryg" style={{ paddingLeft: '1rem' }}>
+                <div className="Aiml galleryg wel" style={{ paddingLeft: '1rem' }}>
                   {selectedEvent && (
                     <div >
                       <div className="areafd">
-                        <p>{selectedEvent.name}</p>
+                        <p>{selectedEvent.title}</p>
                       </div>
 
                       {isLoading ? (
-                        <div className="loading">
-                          <span>NITRR-GALLERY LOADING...</span>
-                        </div>
+                        <div className="skeleton-container">
+            <SkeletonTheme baseColor="#2229a3" highlightColor="#edd3f1">
+              <div className="skeleton-row">
+                {[1, 2, 3].map((index) => (
+                  <div key={index} className="skeleton-box">
+                    <Skeleton width={300} height={200} />
+                  </div>
+                ))}
+              </div>
+            </SkeletonTheme>
+          </div>
                       ) : (
                         <>
                           <div className="galleryWrap">
-                            {selectedEvent.images &&
-                              selectedEvent.images
+                            {selectedEvent.image &&
+                              selectedEvent.image
                                 .slice(
                                   0,
-                                  showMore ? selectedEvent.images.length : 6
+                                  showMore ? selectedEvent.image.length : 6
                                 )
                                 .map((slide, index) => (
                                   <LazyLoad
@@ -285,16 +258,16 @@ export default function Gallary() {
                                       onClick={() => handleOpenModal(index)}
                                     >
                                       {openModal && slideNumber === index ? (
-                                        <img src={slide.original} alt="" />
+                                        <img src={slide} alt="" />
                                       ) : (
-                                        <img src={slide.thumbnail} alt="" />
+                                        <img src={slide} alt="" />
                                       )}
                                     </div>
                                   </LazyLoad>
                                 ))}
                           </div>
 
-                          {selectedEvent.images.length > 6 && (
+                          {selectedEvent.image.length > 6 && (
                             <div className="showMoreButton">
                               <button
                                 className="button1"
@@ -310,7 +283,7 @@ export default function Gallary() {
                               <div className="fullScreenImage">
                                 <img
                                   src={
-                                    selectedEvent.images[slideNumber].original
+                                    selectedEvent.image[slideNumber]
                                   }
                                   alt=""
                                 />
@@ -336,6 +309,11 @@ export default function Gallary() {
                       )}
                     </div>
                   )}
+                  {!selectedEvent && (
+        <div className="noEventSelected">
+          <h4>Select an event to see images</h4>
+        </div>
+      )}
                 </div>
               )}
             </div>
@@ -343,5 +321,22 @@ export default function Gallary() {
         </div>
       </div>
     </>
+  ):null;
+};
+
+const Gallary=(props)=>{
+  const [currentId, setCurrentId] = useState(0);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [currentId, dispatch]);
+  return (
+        <Posts setCurrentId={setCurrentId} tag={props.tag}  />
   );
-}
+
+};
+
+
+export default Gallary;

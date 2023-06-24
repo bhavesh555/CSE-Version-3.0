@@ -71,7 +71,12 @@
   text-decoration: none;
 }
 #sel {
-  width: 200px;
+  width: 250px;
+  height: 30px;
+  font-size: 1.2rem;
+  background-color: #b666c3;
+  color: white;
+  padding: 5px;
 }
 .selectyear {
   padding: 10px;
@@ -86,10 +91,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
+  max-width: 90%;
 }
 .publishtable {
-  padding: 15px;
+  padding: 6px;
 }
 .publishtable thead {
   background-color: #82308e;
@@ -105,17 +110,17 @@
   color: #82308e;
 }
 .pubtable {
-  padding: 10px;
+  padding: 5px;
 }
 .publishtable {
   margin-top: 20px;
-  width: 99%;
+  width: 90%;
   border-collapse: collapse;
 }
 .publishtable th,
 .publishtable td {
   border: 1px solid rgb(52, 52, 59);
-  padding: 5px;
+  padding: 3px;
 }
 .maint {
   display: flex;
@@ -123,7 +128,7 @@
 }
 .publishtable {
   margin-left: 2px;
-  margin-right: 5px;
+  margin-right: 3px;
 }
 @keyframes borderAnimation {
   0% {
@@ -140,12 +145,12 @@
 }
 @media screen and (max-width: 450px) {
   .publishtable {
-    padding: 5px;
+    padding: 2px;
     padding-right: 0;
   }
   .pubtable {
     padding: 2px;
-    margin-left: 10px;
+    margin-left: 3px;
   }
 }
 @media screen and (max-width: 350px) {
